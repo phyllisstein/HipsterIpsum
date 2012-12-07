@@ -1,0 +1,10 @@
+[
+    {
+        "keys": ["ctrl+alt+h"],
+        "command": "hipster_ipsum"
+    },
+    {
+        "keys": ["h", "i", "p", "s", "t", "u", "m", "tab"],
+        "command": "hipster_ipsum"
+    }
+]
