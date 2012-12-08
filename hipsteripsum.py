@@ -20,12 +20,15 @@ class hipsterIpsumCommand(sublime_plugin.TextCommand):
 
         selections = self.view.sel()
         threads = []
+        passedThreads = 0
+        skippedThreads = 0
         for theSelection in selections:
             theSubstring = self.view.substr(theSelection)
             if len(theSubstring) == 0:
                 newThread = HipsterIpsumAPICall(theSelection, defaultParas, ipsumType, useHTML, "")
                 threads.append(newThread)
                 newThread.start()
+                passedThreads += 1
             else:
                 try:
                     parasHere = int(theSubstring)
@@ -33,23 +36,30 @@ class hipsterIpsumCommand(sublime_plugin.TextCommand):
                     newThread = HipsterIpsumAPICall(theSelection, defaultParas, ipsumType, useHTML, theSubstring)
                     threads.append(newThread)
                     newThread.start()
+                    passedThreads += 1
                 else:
                     if parasHere < 1:
                         err("%i is too few paragraphs." % parasHere)
                         err("Select a number between 1 and 99.")
+                        sublime.status_message("Hipster Ipsum: Too few paragraphs (%i)." % parasHere)
+                        skippedThreads += 1
                     elif parasHere > 99:
                         err("%i is too many paragraphs." % parasHere)
                         err("Select a number between 1 and 99.")
+                        sublime.status_message("Hipster Ipsum: Too many paragraphs (%i)." % parasHere)
+                        skippedThreads += 1
                     else:
                         newThread = HipsterIpsumAPICall(theSelection, parasHere, ipsumType, useHTML, theSubstring)
                         threads.append(newThread)
                         newThread.start()
-
-        self.view.sel().clear()
-
-        edit = self.view.begin_edit("hipster_ipsum")
-
-        self.manageThreads(edit, threads)
+                        passedThreads += 1
+        if passedThreads > 0:
+            self.view.sel().clear()
+            edit = self.view.begin_edit("hipster_ipsum")
+            self.manageThreads(edit, threads)
+        else:
+            sublime.status_message("Hipster Ipsum: No authentic selections.")
+            err("Skipped %i selections." % skippedThreads)
 
     def manageThreads(self, theEdit, theThreads, offset=0, i=0, direction=1):
         next_threads = []
