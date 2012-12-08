@@ -38,7 +38,7 @@ class hipsterIpsumCommand(sublime_plugin.TextCommand):
                         err("%i is too few paragraphs." % parasHere)
                         err("Select a number between 1 and 99.")
                     elif parasHere > 99:
-                        err("%i is too many paragraphs." & parasHere)
+                        err("%i is too many paragraphs." % parasHere)
                         err("Select a number between 1 and 99.")
                     else:
                         newThread = HipsterIpsumAPICall(theSelection, parasHere, ipsumType, useHTML, theSubstring)
