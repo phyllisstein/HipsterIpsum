@@ -2,16 +2,18 @@ import sublime
 import sublime_plugin
 import threading
 import urllib
-# import urlparse
 import json
-import urllib2
+if int(sublime.version()) >= 3000:
+    import HipsterIpsum3.requests as requests
+else:
+    import requests
 
 
 def err(theError):
-    print "[Hipster Ipsum: " + theError + "]"
+    print("[Hipster Ipsum: " + theError + "]")
 
 
-class hipsterIpsumCommand(sublime_plugin.TextCommand):
+class HipsterIpsumCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         s = sublime.load_settings("Hipster Ipsum.sublime-settings")
         defaultParas = s.get("paragraphs", 1)
@@ -55,13 +57,12 @@ class hipsterIpsumCommand(sublime_plugin.TextCommand):
                         passedThreads += 1
         if passedThreads > 0:
             self.view.sel().clear()
-            edit = self.view.begin_edit("hipster_ipsum")
-            self.manageThreads(edit, threads)
+            self.manageThreads(threads)
         else:
             sublime.status_message("Hipster Ipsum: No authentic selections.")
             err("Skipped %i selections." % skippedThreads)
 
-    def manageThreads(self, theEdit, theThreads, offset=0, i=0, direction=1):
+    def manageThreads(self, theThreads, offset=0, i=0, direction=1):
         next_threads = []
         for thread in theThreads:
             if thread.is_alive():
@@ -69,7 +70,7 @@ class hipsterIpsumCommand(sublime_plugin.TextCommand):
                 continue
             if thread.result == False:
                 continue
-            offset = self.replace(theEdit, thread, offset)
+            offset = self.replace(thread, offset)
         theThreads = next_threads
 
         if len(theThreads):
@@ -82,15 +83,14 @@ class hipsterIpsumCommand(sublime_plugin.TextCommand):
             i += direction
             self.view.set_status("hipster_ipsum", "Gentrifying... [%s=%s]" % (" " * before, " " * after))
 
-            sublime.set_timeout(lambda: self.manageThreads(theEdit, theThreads, offset, i, direction), 100)
+            sublime.set_timeout(lambda: self.manageThreads(theThreads, offset, i, direction), 100)
             return
 
-        self.view.end_edit(theEdit)
         self.view.erase_status("hipster_ipsum")
         selections = len(self.view.sel())
         sublime.status_message("%s area%s gentrified." % (selections, '' if selections == 1 else 's'))
 
-    def replace(self, theEdit, theThread, offset):
+    def replace(self, theThread, offset):
         selection = theThread.selection
         original = theThread.original
         result = theThread.result
@@ -99,7 +99,7 @@ class hipsterIpsumCommand(sublime_plugin.TextCommand):
             selection = sublime.Region(selection.begin() + offset, selection.end() + offset)
 
         result = self.normalize_line_endings(result)
-        self.view.replace(theEdit, selection, result)
+        self.view.run_command("hipster_ipsum_replace", {"begin": selection.begin(), "end": selection.end(), "data": result})
         endpoint = selection.begin() + len(result)
         self.view.sel().add(sublime.Region(endpoint, endpoint))
 
@@ -128,18 +128,19 @@ class HipsterIpsumAPICall(threading.Thread):
 
     def run(self):
         params = {"paras": self.paragraphs, "type": self.ipsumType, "html": self.useHTML}
-        query = urllib.urlencode(params)
-        uriString = "http://hipsterjesus.com/api/?" + query
+        
         try:
-            connection = urllib2.urlopen(uriString)
-            data = json.load(connection)
-            self.result = data["text"]
-            return
-        except urllib2.HTTPError as e:
-            error = "HTTP error " + str(e.code)
-            err(error)
-        except urllib2.URLError as e:
-            error = "URL error " + str(e.reason)
-            err(error)
+            r = requests.get("http://hipsterjesus.com/api/", params=params)
+        except Exception as e:
+            err("Exception: %s" % e)
+            self.result = False
 
-        self.result = False
+        data = r.json()
+        self.result = data["text"]
+
+class HipsterIpsumReplaceCommand(sublime_plugin.TextCommand):
+    def run(self, edit, begin, end, data):
+        a = long(begin) if int(sublime.version()) < 3000 else begin
+        b = long(end) if int(sublime.version()) < 3000 else end
+        region = sublime.Region(a, b)
+        self.view.replace(edit, region, data)

@@ -1,11 +1,11 @@
-[Hipster Ipsum for Sublime Text 2](http://sublime.daniel.sh/hipstum/)
+Hipster Ipsum for Sublime Text 2 and 3
 ================================
 If you were into _Lorem ipsum_ before it sold out and have been looking for something to fill the void, Hipster Ipsum is your new bicycle. Pull bespoke filler text from [Hipster Ipsum](http://hipsteripsum.me), via the [Hipster Jesus](http://hipsterjesus.com) API, and have it Occupy Sublime.
 
 
 Installation
 ------------
-[Package Control](http://wbond.net/sublime_packages/package_control) is the preferred source for direct-trade, farm-to-table Sublime packages, including Hipster Ipsum. DIYers can find small-batch source files at [the GitHub repository](http://github.com/phyllisstein/HipsterIpsum).
+You've probably never heard of [Sublime Package Control](http://wbond.net/sublime_packages/package_control), but it's the preferred method for installing HipsterIpsum. DIYers can find small-batch source files at [the GitHub repository](http://github.com/phyllisstein/HipsterIpsum).
 
 
 Usage
@@ -22,7 +22,7 @@ Configuration
 
 Cred
 ----
-Thanks to [Will Bond](http://wbond.net) for his [tutorial on creating a Sublime Text 2 plugin](http://net.tutsplus.com/tutorials/python-tutorials/how-to-create-a-sublime-text-2-plugin/), which offered some next-level solutions to a few difficulties.
+Thanks to [Will Bond](http://wbond.net) for his [tutorial on creating a Sublime Text 2 plugin](http://net.tutsplus.com/tutorials/python-tutorials/how-to-create-a-sublime-text-2-plugin/), which offered some next-level solutions to a few difficulties. Thanks as well to the [requests](http://docs.python-requests.org/en/latest/) library, the sustainable biodiesel motor behind the farm-to-table HTTP.
 
 
 Cosby Sweater

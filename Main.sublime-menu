@@ -18,7 +18,7 @@
                             {
                                 "command": "open_file", "args":
                                 {
-                                    "file": "${packages}/Hipster Ipsum/README.mdown"
+                                    "file": "${packages}/HipsterIpsum/README.mdown"
                                 },
                                 "caption": "README"
                             },
@@ -28,14 +28,14 @@
                             {
                                 "command": "open_file", "args":
                                 {
-                                    "file": "${packages}/Hipster Ipsum/Hipster Ipsum.sublime-settings"
+                                    "file": "${packages}/HipsterIpsum/Hipster Ipsum.sublime-settings"
                                 },
                                 "caption": "Settings – Default"
                             },
                             {
                                 "command": "open_file", "args":
                                 {
-                                    "file": "${packages}/User/Hipster Ipsum.sublime-settings"
+                                    "file": "${packages}/User/HipsterIpsum.sublime-settings"
                                 },
                                 "caption": "Settings – User"
                             }
