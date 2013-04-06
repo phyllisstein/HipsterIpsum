@@ -4,7 +4,7 @@ import threading
 import urllib
 import json
 if int(sublime.version()) >= 3000:
-    import HipsterIpsum3.requests as requests
+    from . import requests
 else:
     import requests
 
